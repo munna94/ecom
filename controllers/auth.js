@@ -80,7 +80,7 @@ let signin = (req, res) => {
 
 const signout = (req, res) => {
     res.clearCookie('t'); //as token is setted in key t in cookie
-    res.status(200).send({
+    return res.status(200).send({
         status: 'success',
         message: 'signout successfully..'
     })
@@ -92,9 +92,38 @@ const requireSignin = expressJwt({
     userProperty: "auth"
 })
 
+const isAuth = (req, res, next) => {
+    console.log(req.profile);
+    console.log(req.auth);
+
+
+    let user = req.profile && req.auth && req.profile._id == (req.auth._id);
+    if (!user) {
+        return res.status(403).send({
+            status: 'failed',
+            message: 'acces denied.'
+        })
+    }
+    next();
+}
+
+isAdmin = (req, res, next) => {
+    if (req.profile.role === 0) {
+        return res.status(403).send({
+            status: 'failed',
+            message: 'permission denied!'
+        })
+    }
+    next();
+}
+
+
+
 module.exports = {
     signup,
     signin,
     signout,
-    requireSignin
+    requireSignin,
+    isAuth,
+    isAdmin
 };

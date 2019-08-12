@@ -6,7 +6,7 @@ const authController = require('../controllers/auth')
 // const {
 //     userSignupValidator
 // } = require('../validators/userValidator');
-userRouter.get("/secret/:userId", authController.requireSignin, (req, res) => {
+userRouter.get("/secret/:userId", authController.requireSignin, authController.isAuth, authController.isAdmin, (req, res) => {
     res.send({
         profile: req.profile
     })
