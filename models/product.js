@@ -38,6 +38,8 @@ const productSchema = new mongoose.Schema({
         required: false,
         type: Boolean
     }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model("Product", productSchema, 'products')
