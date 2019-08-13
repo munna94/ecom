@@ -5,7 +5,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/user')
+const categoryRoutes = require('./routes/category');
+const productRoutes = require('./routes/product');
 
 require('dotenv').config();
 const expressvalidator = require('express-validator');
@@ -55,7 +57,7 @@ app.use(cookieParser());
 //middleware to validate
 app.use(expressvalidator());
 //middleware for user router
-app.use("/api", authRoutes, userRoutes)
+app.use("/api", authRoutes, userRoutes, categoryRoutes, productRoutes)
 app.listen(process.env.PORT, (err, result) => {
     console.log(`server is running on port ${process.env.PORT}`);
 });

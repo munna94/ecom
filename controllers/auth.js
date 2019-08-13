@@ -86,7 +86,7 @@ const signout = (req, res) => {
     })
 
 }
-//to validate the token for each api call
+//to validate the token for each api call(it will only validate the token and payload(given during creation of token) whill be added to auth key )
 const requireSignin = expressJwt({
     secret: process.env.JWT_SECRET,
     userProperty: "auth"
@@ -108,7 +108,7 @@ isAdmin = (req, res, next) => {
     if (req.profile.role === 0) {
         return res.status(403).send({
             status: 'failed',
-            message: 'permission denied!'
+            message: 'Admin Resource! permission denied!'
         })
     }
     next();
