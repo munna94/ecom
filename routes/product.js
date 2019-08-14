@@ -5,7 +5,7 @@ const userController = require('../controllers/user')
 const productController = require('../controllers/product')
 
 
-
+productRouter.route("/products").get(productController.list);
 productRouter.route("/product/:productId").get(productController.read);
 productRouter.route("/product/:productId/:userId").delete(authController.requireSignin, authController.isAuth, authController.isAdmin, productController.remove);
 productRouter.route("/product/:productId/:userId").put(authController.requireSignin, authController.isAuth, authController.isAdmin, productController.update);

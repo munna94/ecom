@@ -81,7 +81,7 @@ const read = (req, res) => {
 }
 
 const remove = (req, res) => {
-    let product = req.product;
+    let product = req.product; //monggose works on result of find model.find().remove or update since req.product is result of find so it will work.because is js object has refrence
     product.remove((err, deletedProduct) => {
         if (err) {
             return res.status(500).send({
@@ -148,11 +148,39 @@ const update = (req, res) => {
     })
 }
 
+//by sell=/products?sortBy=sold&order=desc&limit=4;
+//if no param send all
+const list = (req, res) => {
+    let order = req.query.order ? req.query.order : 'asc';
+    let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+    let limit = req.query.limit ? req.query.limit : 6;
+
+    Product.find({}, {
+            "photo": 0
+        })
+        .populate('category')
+        .sort([
+            [sortBy, order]
+        ])
+        .limit(limit)
+        .exec((err, products) => {
+            if (err) {
+                return res.status(400).send({
+                    status: 'failed',
+                    message: 'product not found'
+                })
+            }
+            res.status(200).send(products)
+
+        })
+
+}
 
 module.exports = {
     create,
     read,
     remove,
     update,
-    productById
+    productById,
+    list
 };
