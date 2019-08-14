@@ -153,7 +153,10 @@ const update = (req, res) => {
 const list = (req, res) => {
     let order = req.query.order ? req.query.order : 'asc';
     let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
-    let limit = req.query.limit ? req.query.limit : 6;
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let size = req.query.size ? parseInt(req.query.size) : 10;
+    let skip = size * (page - 1);
+    let limit = size;
 
     Product.find({}, {
             "photo": 0
@@ -162,6 +165,7 @@ const list = (req, res) => {
         .sort([
             [sortBy, order]
         ])
+        .skip(skip)
         .limit(limit)
         .exec((err, products) => {
             if (err) {
@@ -176,11 +180,45 @@ const list = (req, res) => {
 
 }
 
+/**
+ * it will find the products based on the req product category
+ * and the product which has same category get returned
+ * 
+ */
+const listRelated = (req, res) => {
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let size = req.query.size ? parseInt(req.query.size) : 10;
+    let skip = size * (page - 1);
+    let limit = size;
+    Product.find({
+            _id: {
+                $ne: req.product //this is for other than current produt _Id
+            },
+            category: req.product.category
+        }, {
+            photo: 0
+        })
+        .skip(skip)
+        .limit(limit)
+        .populate('category', '_id name')
+        .exec((err, productOtherthanCurrent) => {
+            if (err) {
+                return res.status(400).send({
+                    status: 'failed',
+                    message: 'product not found'
+                })
+            }
+            res.status(200).send(productOtherthanCurrent)
+        })
+
+}
+
 module.exports = {
     create,
     read,
     remove,
     update,
     productById,
-    list
+    list,
+    listRelated
 };

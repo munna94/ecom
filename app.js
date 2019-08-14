@@ -15,10 +15,10 @@ const expressvalidator = require('express-validator');
 mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useCreateIndex: true
-}).then((err, result) => {
-    //if (err) console.log(err);
-    console.log('db connected');
-})
+}).then((success) => {
+    //console.log('db connected');
+}).catch(err => console.log(err));
+
 
 //this is used to remove cors error while calling the api from clients
 let cors = require("cors");
