@@ -13,6 +13,9 @@ userRouter.get("/secret/:userId", authController.requireSignin, authController.i
         profile: req.profile
     })
 })
+
+userRouter.route("/user/:userId").get(authController.requireSignin, authController.isAuth, userController.read);
+userRouter.route("/user/:userId").put(authController.requireSignin, authController.isAuth, userController.update)
 //check parameter
 userRouter.param("userId", userController.userById)
 
